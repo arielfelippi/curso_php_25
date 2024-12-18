@@ -14,4 +14,8 @@ $ladoC =10;
 
 if ($ladoA == $ladoB && $ladoB == $ladoC) {
     echo "As medidas informadas formam um triangulo Equilatero.";
+}else if ($ladoA == $ladoB || $ladoB == $ladoC || $ladoA == $ladoC) {
+    echo "As medidas informadas formam um triangulo Isoceles.";
+} else {
+    echo "As medidas informadas formam um triangulo Escaleno.";
 }
