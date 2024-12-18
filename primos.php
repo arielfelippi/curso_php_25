@@ -14,14 +14,22 @@
     9 / 8 
 */
 
-$numero = 9;
+$numero = 747;
 
 // (9 -1) $numero - 1
 $limitador = $numero - 1;
 
+// mesma coisa
+$i=0;
+$i = $i + 1; // posso mudar o incremento (1 => 2 ... 4 ... 5)
+$i += 1; // posso mudar o incremento
+$i++; // sempre 1 em 1
+
 $primo = true;
 
 for ($i = 2; $i <= $limitador; $i++ ) {
+
+    $resto = $numero % $i; 
 
     // break
     if ($resto == 0) {
@@ -30,7 +38,6 @@ for ($i = 2; $i <= $limitador; $i++ ) {
     }
     
 }
-
 
 if ($primo) {
     echo "<br>O $numero é primo.";
