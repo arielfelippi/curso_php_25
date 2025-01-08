@@ -9,3 +9,12 @@
  * Não se deve utilizar funcoes nativas do php como asort, usort e sort.
  */
 
+ // 1-) Recriar o exercicio da tabuada utilizando funcoes.
+
+ function tabuada($numero) {
+    for($i = 0; $i <= 10; $i++) {
+        echo "<br>$numero x $i = " . $numero * $i;
+    }
+ }
+
+//  tabuada(7); 
