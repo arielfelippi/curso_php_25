@@ -1,13 +1,13 @@
 <?php 
             echo "Array desordenado <br> [10] [5] [2] [30] [85] [14]";
 
-            $array = [10, 5, 2, 30, 85, 14];
+            $array = [150, 10, 5, 2, 30, 85, 14, 1];
             //         0, 1, 2,  3,  4,  5
 
             $tam = count($array) -1; // 6 - 1 = 5
 
-            for ($i = 0; $i < $tam / 2; $i++ ) {       
-                for ($j = $tam +1 / 2; $j > 0; $j--) {
+            for ($i = 0; $i < $tam ; $i++ ) {       
+                for ($j = $tam ; $j > 0; $j--) {
                     $anterior = $j -1;
 
                     if ($array[$anterior] > $array[$j]) {
@@ -28,4 +28,4 @@
             foreach($array as $resultado){
                 echo "[$resultado] ";
             }
-        ?>
+        
