@@ -36,7 +36,7 @@ class ArquivoTxt {
     }
 
     public function escrever($dados) {
-        $dadosParaSalvar[] = json_encode($dados, JSON_PRETTY_PRINT);
+        $dadosParaSalvar = json_encode($dados, JSON_PRETTY_PRINT);
         $dadosInseridos = file_put_contents($this->caminhoArquivo, $dadosParaSalvar);
 
         if (!$dadosInseridos) {
