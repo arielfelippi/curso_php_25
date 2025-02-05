@@ -1,28 +1,51 @@
 <?php
 
-require_once "./ArquivoTxt.php";
+require_once "./GerenciadorDeArquivo.php";
 
 class ContaBancaria {
-    public $titular = "";
-    public $destinatario = "";
-    public $saldo = 0;
+    public string $titular = "";
+    public string $destinatario = "";
+    public float $saldo = 0;
 
-    private ArquivoTxt $arquivoTxt;
+    private GerenciadorDeArquivo $arquivoTxt;
     
-    public function __construct(ArquivoTxt $arquivoTxt)
+    public function __construct(GerenciadorDeArquivo $arquivoTxt)
     {
         $this->arquivoTxt = $arquivoTxt;
     }
     
-    public function listarContas(): array
-    {
-        return $this->arquivoTxt->ler();
-    }
-
-    public function criarConta(string $nome, float $saldoInicial = 0.0): void
+    public function listarContas()
     {
         $dados = $this->arquivoTxt->ler();
-        $idConta = $this->gerarIdUnico($dados);
+        
+        foreach ($dados as $idx => $conta) {
+
+            $numConta = $conta['id'];
+            $nome = $conta['nome'];
+            $saldo = $conta['saldo'];
+
+            echo "N° Conta: {$numConta} <br> Nome: {$nome} <br> Saldo: {$saldo}<br><br>";
+        }
+    }
+
+    private function gerarIdConta() {
+        $idsConta = [];
+        $dados = $this->arquivoTxt->ler();
+
+        foreach($dados as $idx => $conta) {
+            $idsConta[] = $conta['id'];
+        }
+
+        $proximoId  = array_reverse($idsConta);
+
+        return $proximoId[0] + 1;
+
+    }
+
+    public function criarConta(string $nome, float $saldoInicial = 0.0)
+    {
+        $idConta = $this->gerarIdConta();
+        $dados = $this->arquivoTxt->ler();
 
         $novaConta = [
             'id' => $idConta,
@@ -52,7 +75,9 @@ class ContaBancaria {
     public function depositar($idConta, $valor) {
 
         $dados = $this->arquivoTxt->ler();
-        foreach ($dados as &$conta) {
+
+        foreach ($dados as $idx => &$conta) {
+
             if ($conta['id'] === $idConta) {
                 $conta['saldo'] += $valor;
                 $this->arquivoTxt->escrever($dados);
@@ -64,17 +89,11 @@ class ContaBancaria {
 
     public function pix($valor) {
 
-        $temSaldo = $this->temSaldo($valor);
-
-        if (!$temSaldo) {
-           throw new Exception("Erro ao efetuar o PIX.<br> Saldo atual R$: $this->saldo. valor a transferir R$ $valor.");
-        }
-
-        $this->saldo -= $valor;
-        $this->setHistorico("Ana", $this->saldo, "Maria");
     }
-    public function extrato() {
+
+    public function extrato($idConta) {
         $dados = $this->arquivoTxt->ler();
+        
         foreach ($dados as $conta) {
             if ($conta['id'] === $idConta) {
                 return $conta['saldo'];
@@ -84,23 +103,12 @@ class ContaBancaria {
         return null; 
     }
 }
-
-// $conta = new ContaBancaria();
-// $conta->depositar(500);
-// $conta->sacar(100);
-// $conta->pix(200);
-// echo $conta->extrato();
-
-$caminhoArquivo = "C://users//aluno//documents//";
 $nomeArquivo = "banco_do_brasil.txt";
-$arquivo = $caminhoArquivo . $nomeArquivo;
 
-$arquivoTxt = new ArquivoTxt($nomeArquivo);
-$conta = [
-    "id" => 10,
-    "nome" => "Joao",
-    "saldo" => 100,
-];
+$arquivoTxt = new GerenciadorDeArquivo($nomeArquivo);
+$conta = new ContaBancaria($arquivoTxt);
 
-$arquivoTxt->escrever($conta);
-echo $arquivoTxt->ler();
+$conta->criarConta("Rafael", 150);
+// $conta->depositar(10, 500);
+// echo $conta->extrato(10);
+echo $conta->listarContas();

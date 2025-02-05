@@ -1,5 +1,27 @@
-{
-    "id": 10,
-    "nome": "Joao",
-    "saldo": 100
-}
+[
+    {
+        "id": 1,
+        "nome": "Maria",
+        "saldo": 1000
+    },
+    {
+        "id": 2,
+        "nome": "Joao do caminhao",
+        "saldo": 600
+    },
+    {
+        "id": 3,
+        "nome": "Pedro Alvarez Cabral",
+        "saldo": 1500
+    },
+    {
+        "id": 4,
+        "nome": "Ariel",
+        "saldo": 10
+    },
+    {
+        "id": 5,
+        "nome": "Rafael",
+        "saldo": 150
+    }
+]
