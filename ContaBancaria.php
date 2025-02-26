@@ -2,6 +2,8 @@
 
 require_once "./GerenciadorDeArquivo.php";
 
+require_once "./Conexao.php";
+
 class ContaBancaria {
     public string $titular = "";
     public string $destinatario = "";
@@ -90,7 +92,7 @@ class ContaBancaria {
     public function pix($contaOrigem, $contaDestino, $valor) {
 
         $dados = $this->arquivoTxt->ler();
-        
+
         foreach($dados as $idx => &$conta){
             if ($this->extrato($contaOrigem) < $valor){
                 break;
@@ -122,12 +124,53 @@ class ContaBancaria {
         return null; 
     }
 }
-$nomeArquivo = "banco_do_brasil.txt";
+// $nomeArquivo = "banco_do_brasil.txt";
 
-$arquivoTxt = new GerenciadorDeArquivo($nomeArquivo);
-$conta = new ContaBancaria($arquivoTxt);
+// $arquivoTxt = new GerenciadorDeArquivo($nomeArquivo);
+// $conta = new ContaBancaria($arquivoTxt);
 
-$conta->criarConta("Rafael", 150);
-// $conta->depositar(10, 500);
-// echo $conta->extrato(10);
-echo $conta->listarContas();
+// $conta->criarConta("Rafael", 150);
+// // $conta->depositar(10, 500);
+// // echo $conta->extrato(10);
+// echo $conta->listarContas();
+
+// print_r($conexao);
+
+// $conexao->close();
+// CRUD: Create Read Update Delete
+// READ (ALL) -> READ ONLY (Filtros: id, email, cpf)
+
+// http://localhost/curso_php_25/ContaBancaria.php?id=5
+// http://localhost/curso_php_25/ContaBancaria.php?id=5&saldo=1000
+$id = $_REQUEST["id"] ?? 0;
+$saldo = $_REQUEST["saldo"] ?? 0;
+
+$sql = "SELECT * FROM conta_bancaria WHERE id = $id";
+
+if ($saldo > 0) {
+    // SELECT * FROM conta_bancaria WHERE id = $id and saldo <= $saldo;
+    $sql .= " and saldo <= $saldo";
+    // $sql = $sql . " and saldo <= $saldo";
+}
+
+// SELECT * FROM conta_bancaria WHERE id = $id and saldo <= $saldo
+// SELECT * FROM conta_bancaria WHERE id = $id and saldo <= $saldo;
+$sql .=";";
+
+$result = $conexao->query($sql);
+
+$existeDados = $result->num_rows;
+
+if (!$existeDados) {
+    echo "Não foi possivel obter os dados.";
+    exit;
+}
+
+while ($registro = $result->fetch_assoc()) {
+    $linha = (object) $registro;
+    //  $linha->id <= $linha["id"]
+
+    echo "Id: $linha->id Nome: $linha->nome_titular Saldo: $linha->saldo";
+    
+    echo "<br>";
+}
