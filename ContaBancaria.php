@@ -140,17 +140,41 @@ class ContaBancaria {
 // CRUD: Create Read Update Delete
 // READ (ALL) -> READ ONLY (Filtros: id, email, cpf)
 
-// http://localhost/curso_php_25/ContaBancaria.php?id=5
-// http://localhost/curso_php_25/ContaBancaria.php?id=5&saldo=1000
-$id = $_REQUEST["id"] ?? 0;
-$saldo = $_REQUEST["saldo"] ?? 0;
 
-$sql = "SELECT * FROM conta_bancaria WHERE id = $id";
+// closure != (<>) clojure
+
+$fnAjustarWhere = function ($sql) {
+    $sqlAjustado = "";
+
+    // ... criar a logica
+
+    return $sqlAjustado;
+};
+
+// http://localhost/curso_php_25/ContaBancaria.php?id=5
+// http://localhost/curso_php_25/ContaBancaria.php?id=5&saldoMin=200&saldoMax=1000
+$id = $_REQUEST["id"] ?? 0;
+$saldoMin = $_REQUEST["saldoMin"] ?? 0;
+$saldoMax = $_REQUEST["saldoMax"] ?? 0;
+$nomeTitular = $_REQUEST["nomeTitular"] ?? "";
+
+$sql = "SELECT * FROM conta_bancaria";
+
+if ($id > 0) {
+    $sql .= " WHERE id = $id";
+}
+
+// SELECT * FROM conta_bancaria and saldo <= $saldo;
 
 if ($saldo > 0) {
     // SELECT * FROM conta_bancaria WHERE id = $id and saldo <= $saldo;
+    $sql .= $fnAjustarWhere($sql);
     $sql .= " and saldo <= $saldo";
     // $sql = $sql . " and saldo <= $saldo";
+}
+
+if (!empty($nomeTitular)) {
+    $sql .= " and nome_titular LIKE '%$nomeTitular%'";
 }
 
 // SELECT * FROM conta_bancaria WHERE id = $id and saldo <= $saldo
