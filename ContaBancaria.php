@@ -22,24 +22,61 @@ class ContaBancaria {
         }
     }
 
-    public function criarConta(string $nome, float $saldoInicial = 0.0)
-    {
+    private function obterDadosConta($idConta) {
+        $sql = "SELECT * FROM conta_bancaria WHERE id = '$idConta';";
 
+        return $this->bancoDeDados->execQuery($sql);
+    }
+
+    public function criarConta(string $nome, float $valor = 0.0)
+    {
+        $sql = "INSERT INTO conta_bancaria (nome_titular, saldo) VALUES ('$nome', $valor);";
+        $idConta = $this->bancoDeDados->execQuery($sql);
+        $this->extrato($idConta);
     }
 
     public function sacar($idConta, $valor)
     {
+        if (empty($idConta)) {
+            return "Erro, id da conta está em branco ou é inváldo!";
+        }
 
+        $dadosConta = $this->obterDadosConta($idConta);
+
+        if (empty($dadosConta)) {
+            return "Erro ao obter a conta. Conta inexistente. verifique o ID informado.";
+        }
+
+        $saldo = $dadosConta[0]->saldo;
+        $valorTmp = $saldo - $valor;
+
+        $sql = "UPDATE conta_bancaria SET saldo=$valorTmp WHERE id='$idConta';";
+        $this->bancoDeDados->execQuery($sql);
     }
 
     public function depositar($idConta, $valor)
     {
+        if (empty($idConta)) {
+            return "Erro, id da conta está em branco ou é inváldo!";
+        }
 
+        $dadosConta = $this->obterDadosConta($idConta);
+
+        if (empty($dadosConta)) {
+            return "Erro ao obter a conta. Conta inexistente. verifique o ID informado.";
+        }
+
+        $saldo = $dadosConta[0]->saldo;
+        $valorTmp = $saldo + $valor;
+
+        $sql = "UPDATE conta_bancaria SET saldo=$valorTmp WHERE id='$idConta';";
+        $this->bancoDeDados->execQuery($sql);
     }
 
     public function pix($contaOrigem, $contaDestino, $valor)
     {
-     
+        $this->sacar($contaOrigem, $valor);
+        $this->depositar($contaDestino, $valor);     
     }
 
     public function listarContas()
@@ -68,23 +105,5 @@ $saldoMax = $_REQUEST["saldoMax"] ?? 0;
 $nomeTitular = $_REQUEST["nomeTitular"] ?? "";
 
 $conta = new ContaBancaria($bancoDeDados);
-echo $conta->extrato($id);
-
-exit;
-
-if ($id > 0) {
-    $sql .= " AND id = '$id'";
-    // $sql = "SELECT * FROM conta_bancaria WHERE 1=1 AND id = 10"; 
-}
-
-if ($saldoMin > 0) {
-    $sql .= " AND saldo >= $saldoMin";
-}
-
-if ($saldoMax > 0) {
-    $sql .= " AND saldo <= $saldoMax";
-}
-
-if (!empty($nomeTitular)) {
-    $sql .= " AND nome_titular LIKE '%$nomeTitular%'";
-}
+echo $conta->pix(10, 1, 520);
+echo $conta->listarContas();

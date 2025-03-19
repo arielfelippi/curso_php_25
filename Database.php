@@ -20,7 +20,14 @@ class Database {
     {
         $dados = [];
 
+        $isCreate = str_contains($sql, "INSERT");
+        $isUpdate = str_contains($sql, "UPDATE");
+
         $result = $this->conexao->query($sql);
+        
+        if ($isCreate || $isUpdate) {
+            return $this->conexao->insert_id;
+        }
 
         $existeDados = $result->num_rows > 0;
 
