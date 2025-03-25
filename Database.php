@@ -25,8 +25,12 @@ class Database {
 
         $result = $this->conexao->query($sql);
         
-        if ($isCreate || $isUpdate) {
+        if ($isCreate) {
             return $this->conexao->insert_id;
+        }
+
+        if ($isUpdate) {
+            return $this->conexao->affected_rows;
         }
 
         $existeDados = $result->num_rows > 0;
@@ -46,11 +50,10 @@ class Database {
     public function execQuery($sql, $msg = "Não foi possivel obter os dados.") {
 
         $sql .=";";
-
         $dados = $this->executar($sql);
 
-        if (empty($dados )) {
-            return $msg;
+        if (empty($dados)) {
+            throw new Exception($msg);
         }
         
         return $dados;

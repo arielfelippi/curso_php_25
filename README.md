@@ -13,10 +13,21 @@
 ## Tema de casa
 
 
-Configurar MariaDB:
+# Configurar MariaDB:
 
-CREATE USER 'user1'@localhost IDENTIFIED BY 'password1';
+SHOW DATABASES;
 
-GRANT ALL PRIVILEGES ON *.* TO 'user1'@localhost IDENTIFIED BY 'password1';
+CREATE DATABASE IF NOT EXISTS curso_php_25;
+
+USE curso_php_25;
+
+CREATE USER 'aluno'@localhost IDENTIFIED BY '1234';
+
+GRANT ALL PRIVILEGES ON *.* TO 'aluno'@localhost IDENTIFIED BY '1234';
+
+FLUSH PRIVILEGES;
+
+SELECT User FROM mysql.user;
+
 
 https://phoenixnap.com/kb/how-to-create-mariadb-user-grant-privileges#:~:text=To%20create%20a%20new%20MariaDB,to%20a%20local%20MySQL%20server.
