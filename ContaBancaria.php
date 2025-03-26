@@ -48,7 +48,7 @@ class ContaBancaria {
         $saldo = $dadosConta[0]->saldo ?? 0;
 
         if ($saldo <= 0 || $valor > $saldo) {
-            throw new Exception("Saldo indísponivel.");
+            throw new Exception("Saldo indísponivel.555555555");
         }
 
         $saldoAtual = $saldo - $valor;

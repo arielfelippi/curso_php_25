@@ -34,6 +34,11 @@
                 const urlBase = "http://localhost/curso_php_25/ContaBancaria.php?" + strParams;
         
                 $.get(urlBase).then((contas) => {
+
+                    if (!Array.isArray(contas)) {
+                        alert(contas);
+                        return;
+                    }
                     
                     let htmlUl = "<ul>";
         
